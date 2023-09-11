@@ -5,15 +5,10 @@ from textwrap import dedent
 from airflow import DAG
 
 # Operators; we need this to operate!
-from airflow.models import Param
 from airflow.operators.bash import BashOperator
 
 with DAG(
-        "pipeline_tutorial",
-        params={
-            "x": Param(5, type="integer", minimum=3),
-            "my_int_param": 6
-        },
+        "tutorial",
         # These args will get passed on to each operator
         # You can override them on a per-task basis during operator initialization
         default_args={
@@ -84,9 +79,4 @@ with DAG(
         bash_command=templated_command,
     )
 
-    t4 = BashOperator(
-        task_id="print_params",
-        bash_command="echo {{ params.x }} {{ params.my_int_param }}",
-    )
-
-    t1 >> [t2, t3] >> t4
+    t1 >> [t2, t3]
